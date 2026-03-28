@@ -1,65 +1,37 @@
-import Image from "next/image";
+"use client";
+import Graph from "./Components/Graph";
+import { HashTable, profile } from "./classes/HashTable";
+import { useRef, useState } from "react";
 
 export default function Home() {
+  const [profiles, setProfiles] = useState<profile[]>([{ id: 0, name: "Parent", cx: 600, cy: 70 }]);
+  const nameInput = useRef(null);
+  const idInput = useRef(null);
+  const x = new HashTable(13);
+  const relations: [number, number][] = [[1,2], [1,3], [1,4], [2,5], [2,6], [3,7], [3,8], [4,9], [4,10]];
+
+  const handleSubmit = (e) => { 
+    e.preventDefault();
+    if(!nameInput.current.value || !idInput.current.value) return alert("Please enter both name and ID");
+    console.log(nameInput.current.value);
+    const theProfile = {id: idInput.current.value, name: nameInput.current.value};
+    x.set(idInput.current.value, theProfile);
+    setProfiles(old=>[...old, ...x.toArray]);
+    nameInput.current.value = "";
+    idInput.current.value = "";
+  }
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans">
+      <form className="flex flex-col">
+        <input type="text" placeholder="Enter name" ref={nameInput} />
+        <input type="number" placeholder="Enter ID" ref={idInput} />
+        <button onClick={handleSubmit}>insert to the hashtable</button>
+      </form>
+      <Graph profiles={profiles} relations={relations} />
+      <svg width={600} height={600} style={{border:"3px solid green"}}>
+        <circle cx={200} cy={555} r={40} />
+        <line x1={200} y1={50} x2={200} y2={300} stroke="black" strokeWidth="2"/>
+      </svg>
     </div>
   );
 }
