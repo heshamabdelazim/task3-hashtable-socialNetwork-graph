@@ -25,13 +25,10 @@ export default function Home() {
       <form className="flex flex-col">
         <input type="text" placeholder="Enter name" ref={nameInput} />
         <input type="number" placeholder="Enter ID" ref={idInput} />
-        <button onClick={handleSubmit}>insert to the hashtable</button>
+        <button className="bg-lime-300" onClick={handleSubmit}>insert to the HashTable</button>
       </form>
       <Graph profiles={profiles} relations={relations} />
-      <svg width={600} height={600} style={{border:"3px solid green"}}>
-        <circle cx={200} cy={555} r={40} />
-        <line x1={200} y1={50} x2={200} y2={300} stroke="black" strokeWidth="2"/>
-      </svg>
+
     </div>
   );
 }
