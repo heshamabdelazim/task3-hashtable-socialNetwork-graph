@@ -19,6 +19,7 @@ export default function Home() {
     setProfiles(old=>[...old, ...x.toArray]);
     nameInput.current.value = "";
     idInput.current.value = "";
+    nameInput.current.focus();
   }
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans">

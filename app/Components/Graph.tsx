@@ -12,7 +12,7 @@ function Graph({ profiles, relations }) {
       {linesArr.map((line, i) => (
         <MyLine
           key={`line-${i}`}
-          id={ i}
+          id={i}
           x1={line[0].cx}
           y1={line[0].cy}
           x2={line[1].cx}
@@ -25,12 +25,13 @@ function Graph({ profiles, relations }) {
     </svg>
   );
 }
+const distance = 200
+
 type profileWithPosition = profile & {cx: number, cy: number};
 function generateNodesArr(profiles:profile[]) { 
     // to make this structure: [{id, name, cx, cy}, ...] to render nodes
     let rowNumber = 1;
     let colNumber = 1;
-    let distance=200
     profiles?.map((profile) => { 
       if (colNumber == 5) {
         rowNumber++;
@@ -61,7 +62,6 @@ function generateRelations(relations: [number,number][]) {
 
 function getNodePosition(order:number) { 
   //input 7 =output=> {cx: 3cols*200=(600), cy: 2rows*200=(400)}
-  const distance = 200;
   let colNumber = order % 4 === 0 ? 4 : order % 4;
   let rowNumber = Math.ceil(order / 4);
   return { cx: colNumber * distance, cy: rowNumber * distance };
