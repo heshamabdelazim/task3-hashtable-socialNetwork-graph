@@ -1,28 +1,29 @@
 "use client";
 import Graph from "./Components/Graph";
-import { HashTable, profile } from "./classes/HashTable";
+import { hashTable_instance } from "./classes/HashTable";
 import { useRef, useState } from "react";
+import Profile from "./classes/Profile.ts";
 
 export default function Home() {
-  const [profiles, setProfiles] = useState<profile[]>([{ id: 0, name: "Parent", cx: 600, cy: 70 }]);
+  const [profiles, setProfiles] = useState<[]>(hashTable_instance.toArray);
   const nameInput = useRef(null);
   const idInput = useRef(null);
-  const x = new HashTable(13);
-  const relations: [number, number][] = [[1,2], [1,3], [1,4], [2,5], [2,6], [3,7], [3,8], [4,9], [4,10]];
+  const relations: [number, number][] = hashTable_instance.getRelations();
 
-  const handleSubmit = (e) => { 
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if(!nameInput.current.value || !idInput.current.value) return alert("Please enter both name and ID");
+    if (!nameInput.current.value || !idInput.current.value) return alert("Please enter both name and ID");
     console.log(nameInput.current.value);
-    const theProfile = {id: idInput.current.value, name: nameInput.current.value};
-    x.set(idInput.current.value, theProfile);
-    setProfiles(old=>[...old, ...x.toArray]);
+    const theProfile = new Profile(idInput.current.value, nameInput.current.value);
+    hashTable_instance.set(idInput.current.value, theProfile);
+    setProfiles(old => [...old, theProfile]);
     nameInput.current.value = "";
     idInput.current.value = "";
     nameInput.current.focus();
   }
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans">
+      <h1>Social Graph</h1>
       <form className="flex flex-col">
         <input type="text" placeholder="Enter name" ref={nameInput} />
         <input type="number" placeholder="Enter ID" ref={idInput} />

@@ -3,9 +3,9 @@ import SocialGraph from "./SocialGraph.ts";
 
 
 export class HashTable {
-  size: number;
-  count: number;
-  buckets: Array<Array<[number, Profile]>>;
+  private size: number;
+  private count: number;
+  private buckets: Array<Array<[number, Profile]>>;
   toArray: Profile[];
   constructor(size: number = 10) {
     this.buckets = new Array(size).fill(null).map(() => []);
@@ -52,31 +52,38 @@ export class HashTable {
   }
 
   // Search O(1)
-  get(key: number): Profile | undefined {
+  public get(key: number): Profile | undefined {
     const idx = this.hash(key);
     const selectedBucket = this.buckets[idx]; // [["999", "Alice"], ["123", "Hesham"]]
     const pair = selectedBucket.find((p) => p[0] === key);
     return pair ? pair[1] : undefined;
   }
+
+  public getAdjacencyList() {
+    return SocialGraph.create_adjacencyList(this.toArray)
+  }
+
+  public getRelations() {
+    return SocialGraph.create_relations(this.getAdjacencyList())
+  }
 }
 
-export const x = new HashTable(13);
+export const hashTable_instance = new HashTable(13);
 
-x.set(123, "hesham");
-x.set(999, "osama");
-x.set(303, "ali");
-x.set(10, "omar");
-x.set(70, "mohamed");
-x.set(80, "ahmed");
+hashTable_instance.set(123, "hesham");
+hashTable_instance.set(999, "osama");
+hashTable_instance.set(303, "ali");
+hashTable_instance.set(10, "omar");
+hashTable_instance.set(70, "mohamed");
+hashTable_instance.set(80, "ahmed");
 
-x.addAdjacent(123, [999, 303, 10]);
-x.addAdjacent(999, [123, 70, 80]);
-x.addAdjacent(303, [123, 999, 70, 80]);
-x.addAdjacent(10, [123, 999, 303, 70, 80]);
-x.addAdjacent(70, [123, 999, 303, 10, 80]);
-x.addAdjacent(80, [123, 999, 303, 10, 70]);
+hashTable_instance.addAdjacent(123, [999, 303, 10]);
+hashTable_instance.addAdjacent(999, [123, 70, 80]);
+hashTable_instance.addAdjacent(303, [123, 999, 70, 80]);
+hashTable_instance.addAdjacent(10, [123, 999, 303, 70, 80]);
+hashTable_instance.addAdjacent(70, [123, 999, 303, 10, 80]);
+hashTable_instance.addAdjacent(80, [123, 999, 303, 10, 70]);
 
-console.log(x.toArray);
+console.log(hashTable_instance.toArray);
 
-const myAdjacent = SocialGraph.create_adjacencyList(x.toArray);
-console.log(myAdjacent)
+const myAdjacent = SocialGraph.create_adjacencyList(hashTable_instance.toArray);

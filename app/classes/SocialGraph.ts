@@ -30,9 +30,9 @@ class SocialGraph {
     }
     // {[key:number]: number[]}[]
     static create_relations(adjacentList: { [key: number]: number[] }[]): [number, number][] {
-        let allKeys: { [key: number]: number } = {};
-        let relations: [number, number][] = []
-        for (let k = 0; k < adjacentList.length; k++) {  //within this loop, I 
+        let allKeys: { [key: number]: number } = {}; // to create {"123_ID": 1, "43_ID": 2}
+        let relations: [number, number][] = [] // to create [[1,2], [3,4], ...] (this is the return)
+        for (let k = 0; k < adjacentList.length; k++) {  //within this loop, I create categories (keys) 
             const keyName = Object.keys(adjacentList[k])[0];
             allKeys[keyName] = k + 1 //to make (allKeys) => {id: order_in_arr} {'123': 1, '999': 2, '303': 3,  '10': 4, '70': 5, '80': 6 }
         }
@@ -45,6 +45,12 @@ class SocialGraph {
         }
         console.log(allKeys)
         return relations;
+    }
+    BFS(adjacentList) {
+        const queue = [];
+    }
+    DFS(adjacentList) {
+        const stack = [];
     }
 }
 
