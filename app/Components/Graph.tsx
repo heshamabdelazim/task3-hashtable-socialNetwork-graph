@@ -4,6 +4,8 @@ import MyNode from './MyNode';
 
 function Graph({ profiles, relations }) {
   const positioned_profiles: profileWithPosition[] = generateNodesArr(profiles);
+  // const positioned_profiles: profileWithPosition[] = [];
+  console.log(profiles)
   const linesArr = generateRelations(relations);
   console.log(positioned_profiles)
 

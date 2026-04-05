@@ -1,74 +1,90 @@
-/*
-class SocialGraph{
-    # static create_adjacencyList
-            input: [{id:123, name: "Hesham", adjacentList:[999, 303, 10]}, ...]
-            output: Adjancency List 
-
-    # static edges_relations
-            input: [{id:123, name: "Hesham", adjacentList:[999, 303, 10]}, ....]
-            output: relations
-
-    # function bfs & dfs
-}
-*/
-
 import Profile from "./Profile.ts";
 
 class SocialGraph {
 
-    constructor() {
-
-    }
+    constructor() { }
     static create_adjacencyList(profiles: Profile[]) {
-        let newArr = profiles.map(p => {
-            const adj: { [key: number]: number[] } = {}
-            adj[p.id] = p.adjacentList;
-            return adj
-        })
-
-        return newArr;
+        // [{id:123, name: "Hesham", adjacentList:[999, 303, 10]}, ...]
+        let adjacentList: { [key: number]: number[] } = {};
+        for (const prof of profiles) {
+            adjacentList[prof["id"]] = prof.adjacentList;
+        }
+        return adjacentList;
     }
     // {[key:number]: number[]}[]
     static create_relations(adjacentList: { [key: number]: number[] }[]): [number, number][] {
-        let allKeys: { [key: number]: number } = {}; // to create {"123_ID": 1, "43_ID": 2}
-        let relations: [number, number][] = [] // to create [[1,2], [3,4], ...] (this is the return)
-        for (let k = 0; k < adjacentList.length; k++) {  //within this loop, I create categories (keys) 
-            const keyName = Object.keys(adjacentList[k])[0];
-            allKeys[keyName] = k + 1 //to make (allKeys) => {id: order_in_arr} {'123': 1, '999': 2, '303': 3,  '10': 4, '70': 5, '80': 6 }
+        const relations: [number, number][] = [] // to create [[1,2], [3,4], ...] (this is the return)
+        const allKeys = Object.keys(adjacentList);
+        console.log(allKeys); //[ '10', '70', '80', '123', '303', '999']
+        const indexedKeys: { [key: string]: number } = {};
+        for (let i = 0; i < allKeys.length; i++) {
+            indexedKeys[allKeys[i]] = i + 1;
         }
-        for (let i = 0; i < adjacentList.length; i++) {
-            const keyName = Object.keys(adjacentList[i])[0];
-            for (let j = 0; j < adjacentList[i][keyName].length; j++) {
-                const neighbor = adjacentList[i][keyName][j];
-                relations.push([i + 1, allKeys[neighbor]])
+        //now we have indexedKeys = { '10': 1, '70': 2, '80': 3, '123': 4, '303': 5, '999': 6 }
+        for (const key of allKeys) {
+            for (const neighbor of adjacentList[key]) {
+                relations.push([indexedKeys[key], indexedKeys[neighbor]])
             }
         }
-        console.log(allKeys)
         return relations;
     }
-    BFS(adjacentList) {
-        const queue = [];
+    public BFS(adjacentList, start, handle_react_node) {
+        const queue = [start]
+        const visited = new Set();
+
+        while (queue.length > 0) {
+            const node = queue.shift();
+
+            if (!visited.has(node)) {
+                queue.push(...adjacentList[node]);
+                console.log("Now We Proceed the node ", node)
+                console.log("we pushed into queue", queue)
+                // handle_react_node()
+                visited.add(node);
+                console.log("and now the current node became visited", visited)
+                console.log("An iteration Done---------------")
+                visited.add(node);
+            }
+        }
+
     }
-    DFS(adjacentList) {
-        const stack = [];
+    public DFS(adjacentList, start) {
+        const stack = [start];
+        const visited = new Set();
+        while (stack.length > 0) {
+            const node = stack.pop();
+            if (!visited.has(node)) {
+                stack.push(...adjacentList[node])
+                console.log("Now We Proceed the node ", node)
+                console.log("we pushed into stack", stack)
+                // handle_react_node()
+                visited.add(node);
+                console.log("and now the current node became visited", visited)
+                console.log("An iteration Done---------------")
+            }
+        }
+
     }
 }
 
 export default SocialGraph;
 
 
+const adjacentList = {
+    '10': [123, 999, 303, 70, 80],
+    '70': [123, 999, 303, 10, 80],
+    '80': [123, 999, 303, 10, 70],
+    '123': [999, 303, 10],
+    '303': [123, 999, 70, 80],
+    '999': [123, 70, 80]
+}
 
-const adjacentList = [
-    { '123': [999, 303, 10] },
-    { '999': [123, 70, 80] },
-    { '303': [123, 999, 70, 80] },
-    { '10': [123, 999, 303, 70, 80] },
-    { '70': [123, 999, 303, 10, 80] },
-    { '80': [123, 999, 303, 10, 70] }
-]
-
+// const x = new SocialGraph();
+// x.BFS(adjacentList, 123);
+// const profiles = [{ id: 123, name: "hesham", adjacentList: [999, 303, 10] }, { id: 999, name: "osama", adjacentList: [123, 70, 80] }, { id: 303, name: "ali", adjacentList: [123, 999, 70, 80] }, { id: 10, name: "omar", adjacentList: [123, 999, 303, 70, 80] }, { id: 70, name: "mohamed", adjacentList: [123, 999, 303, 10, 80] }, { id: 80, name: "ahmed", adjacentList: [123, 999, 303, 10, 70] }]
+// console.log(SocialGraph.create_adjacencyList(profiles))
 console.log(SocialGraph.create_relations(adjacentList));
-/* output
+/* relations output
 [
   [ 1, 2 ], [ 1, 3 ], [ 1, 4 ],
   [ 2, 1 ], [ 2, 5 ], [ 2, 6 ],
@@ -81,3 +97,8 @@ console.log(SocialGraph.create_relations(adjacentList));
   [ 6, 5 ]
 ]
 */
+
+
+
+
+

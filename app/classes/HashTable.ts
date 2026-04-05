@@ -84,6 +84,6 @@ hashTable_instance.addAdjacent(10, [123, 999, 303, 70, 80]);
 hashTable_instance.addAdjacent(70, [123, 999, 303, 10, 80]);
 hashTable_instance.addAdjacent(80, [123, 999, 303, 10, 70]);
 
-console.log(hashTable_instance.toArray);
+console.log(hashTable_instance.toArray, "test");
 
 const myAdjacent = SocialGraph.create_adjacencyList(hashTable_instance.toArray);
